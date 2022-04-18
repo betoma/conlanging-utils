@@ -1,0 +1,108 @@
+%-----DICT COMMANDS------
+%------------------------
+
+\makeatletter
+\@beginparpenalty=10000
+\makeatother
+
+\newcounter{dictwordcount}
+\newcounter{definition}
+
+\newenvironment{entrylist}{
+    \begin{description}[leftmargin=*,labelwidth=*]
+    }{
+    \end{description}
+    }
+
+% \makeatletter
+% \newenvironment{simplentry}[1]%
+%     {%
+%     \item[#1]\hfill
+%     \protected@edef\@currentlabelname{#1}%
+%     \setcounter{definition}{0}%
+%     \begin{description}[align=right,labelwidth=*,font=\normalfont]
+%     }{%
+%     \end{description}
+%     }%
+% \makeatother
+
+\makeatletter
+\newenvironment{dictentry}[3][]%
+    {%
+    \item[#2]\ifblank{#1}{\hfill}{\:\bripa{#1}\hfill}\ifblank{#3}{}{\\
+    {\footnotesize #3}
+    }
+    \protected@edef\@currentlabelname{#2}%
+    \setcounter{definition}{0}%
+    \refstepcounter{dictwordcount}%
+    \begin{description}[align=right,labelwidth=*,font=\normalfont]
+    }{%
+    \end{description}
+    }%
+\makeatother
+
+\newenvironment{entrysublist}{
+    \vspace{2ex}
+    \textit{Compounds \& Phrasal Forms}
+    \begin{entrylist}
+        \small
+    }{
+    \end{entrylist}
+    }
+
+\newbox\BETposbox
+\newdimen\BETcacheleft
+\newdimen\BETcachewd
+
+\makeatletter
+\newcommand{\dictdef}[2][]{%
+    \refstepcounter{definition}%
+    \ifblank{#1}{%
+    \item[\thedefinition.] #2
+    }{%
+    \setbox\BETposbox\hbox{\textit{#1}\,\:}%
+    \itemindent-\wd\BETposbox
+    \BETcacheleft\parshapeindent\@ne
+    \BETcachewd\parshapelength\@ne
+    \advance\BETcacheleft\wd\BETposbox
+    \advance\BETcachewd-\wd\BETposbox
+    \parshape\@ne\BETcacheleft\BETcachewd
+    \advance\BETcacheleft-\wd\BETposbox
+    \advance\BETcachewd\wd\BETposbox
+    \item[\thedefinition.]
+    \usebox\BETposbox#2\par
+    \parshape\@ne\BETcacheleft\BETcachewd
+    \itemindent\z@
+    }%
+}%
+\makeatother
+
+% \newcommand{\dictdef}[2][]{\refstepcounter{definition}%
+%     \item[\thedefinition.] \ifthenelse{\isempty{#1}}{
+%         #2
+%     }{
+%         \textit{#1}\: #2
+%     }%
+%     }%
+\makeatletter
+\WithSuffix\newcommand\dictdef*[2][]{%
+    \refstepcounter{definition}%
+    \ifblank{#1}{%
+    \item[] #2
+    }{%
+    \setbox\BETposbox\hbox{\textit{#1}\,\:}%
+    \itemindent-\wd\BETposbox
+    \BETcacheleft\parshapeindent\@ne
+    \BETcachewd\parshapelength\@ne
+    \advance\BETcacheleft\wd\BETposbox
+    \advance\BETcachewd-\wd\BETposbox
+    \parshape\@ne\BETcacheleft\BETcachewd
+    \advance\BETcacheleft-\wd\BETposbox
+    \advance\BETcachewd\wd\BETposbox
+    \item[]
+    \usebox\BETposbox#2\par
+    \parshape\@ne\BETcacheleft\BETcachewd
+    \itemindent\z@
+    }%
+}%
+\makeatother
